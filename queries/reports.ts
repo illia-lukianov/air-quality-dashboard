@@ -1,7 +1,16 @@
 import type { Client } from "pg";
 
+export type ReportId =
+  | "stations"
+  | "station-map"
+  | "station-measurements"
+  | "regional-pm"
+  | "harmful-pm"
+  | "optimal-so2"
+  | "optimal-co";
+
 export type ReportRequest = {
-  report: string;
+  report: ReportId;
   stationId?: string;
   startDate?: string;
   endDate?: string;
@@ -39,11 +48,52 @@ function calculationType(input: ReportRequest) {
 
 export async function runReport(client: Client, input: ReportRequest) {
   switch (input.report) {
-    case "stations": {
+    case "stations":
+    case "station-map": {
       const result = await client.query(`
         SELECT
           s.id_station AS station_id,
           s.city,
+          COALESCE(
+            NULLIF(to_jsonb(s)->>'latitude', ''),
+            NULLIF(to_jsonb(s)->>'lat', ''),
+            NULLIF(address.data->>'latitude', ''),
+            NULLIF(address.data->>'lat', ''),
+            NULLIF(
+              split_part(
+                trim(
+                  both '()' from COALESCE(
+                    NULLIF(to_jsonb(s)->>'coordinates', ''),
+                    NULLIF(address.data->>'coordinates', '')
+                  )
+                ),
+                ',',
+                2
+              ),
+              ''
+            )
+          ) AS latitude,
+          COALESCE(
+            NULLIF(to_jsonb(s)->>'longitude', ''),
+            NULLIF(to_jsonb(s)->>'lon', ''),
+            NULLIF(to_jsonb(s)->>'lng', ''),
+            NULLIF(address.data->>'longitude', ''),
+            NULLIF(address.data->>'lon', ''),
+            NULLIF(address.data->>'lng', ''),
+            NULLIF(
+              split_part(
+                trim(
+                  both '()' from COALESCE(
+                    NULLIF(to_jsonb(s)->>'coordinates', ''),
+                    NULLIF(address.data->>'coordinates', '')
+                  )
+                ),
+                ',',
+                1
+              ),
+              ''
+            )
+          ) AS longitude,
           s.status::text AS status,
           s.source_type::text AS source_type,
           COALESCE(k.identifier, seb.identifier, ms.url) AS source_identifier,
@@ -64,6 +114,12 @@ export async function runReport(client: Client, input: ReportRequest) {
           JOIN measured_unit mu ON mu.id_measured_unit = smu.id_measured_unit
           WHERE smu.id_station = s.id_station
         ) parameters ON true
+        LEFT JOIN LATERAL (
+          SELECT to_jsonb(sa) AS data
+          FROM station_address sa
+          WHERE sa.id_station = s.id_station
+          LIMIT 1
+        ) address ON true
         LEFT JOIN kmda_station k ON k.id_station = s.id_station
         LEFT JOIN saveecobot_station seb ON seb.id_station = s.id_station
         LEFT JOIN mqtt_server ms ON ms.id_station = s.id_station

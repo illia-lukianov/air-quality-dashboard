@@ -140,14 +140,12 @@
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
-.connectForm input:not([type="checkbox"]):focus,
-.embedForm input:focus {
+.connectForm input:not([type="checkbox"]):focus {
   border-color: #66a789;
   box-shadow: 0 0 0 3px #eaf4ee;
 }
 
-.connectForm input::placeholder,
-.embedForm input::placeholder {
+.connectForm input::placeholder {
   color: #a7b0ab;
 }
 
@@ -196,8 +194,7 @@
 }
 
 .connectButton,
-.applyButton,
-.embedForm button {
+.applyButton {
   display: inline-flex;
   height: 43px;
   align-items: center;
@@ -213,8 +210,7 @@
 }
 
 .connectButton:hover:not(:disabled),
-.applyButton:hover:not(:disabled),
-.embedForm button:hover {
+.applyButton:hover:not(:disabled) {
   transform: translateY(-1px);
   background: #145d45;
 }
@@ -1387,268 +1383,119 @@
   font-size: 10px;
 }
 
-.powerBiSection {
+.mapPanel {
   display: grid;
   gap: 16px;
-}
-
-.powerBiIntro {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 19px 21px;
+  padding: 18px;
   border: 1px solid #e9eeea;
   border-radius: 10px;
   background: white;
 }
 
-.powerBiIcon {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 10px;
-  background: #fff4dd;
-  color: #cf971f;
+.mapHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.powerBiIntro h2 {
+.mapHeader h2 {
   margin: 5px 0 0;
   color: #2c3d33;
   font-family: Manrope, sans-serif;
   font-size: 15px;
 }
 
-.powerBiIntro p {
+.mapHeader p {
   margin: 5px 0 0;
   color: #89958e;
   font-size: 10px;
 }
 
-.embedForm {
-  display: grid;
-  gap: 7px;
-  padding: 16px 18px;
-  border: 1px solid #e9eeea;
-  border-radius: 10px;
-  background: white;
-}
-
-.embedForm > label {
-  color: #57665d;
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.embedForm > div {
-  display: flex;
-  gap: 8px;
-}
-
-.embedForm input {
-  width: 100%;
-  height: 37px;
-  padding: 0 10px;
-  border: 1px solid #e5eae6;
-  border-radius: 6px;
-  outline: none;
-  font-size: 10px;
-}
-
-.embedForm button {
-  height: 37px;
-  flex: 0 0 auto;
-  padding: 0 12px;
-  font-size: 10px;
-}
-
-.embedForm small {
-  color: #96a198;
-  font-size: 9px;
-}
-
-.embedFrameWrap {
+.mapCanvas {
+  height: min(65vh, 650px);
+  min-height: 360px;
   overflow: hidden;
   border: 1px solid #e6ece7;
-  border-radius: 10px;
-  background: white;
+  border-radius: 9px;
+  background: #edf2ee;
 }
 
-.embedToolbar {
-  display: flex;
-  height: 39px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 13px;
-  border-bottom: 1px solid #edf0ed;
-  color: #87948b;
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-}
-
-.embedToolbar > span {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.statusGreen {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  box-shadow: none;
-}
-
-.embedToolbar a {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #597766;
-  font-size: 9px;
-  letter-spacing: 0;
-  text-decoration: none;
-}
-
-.embedFrame {
-  display: block;
+.leafletMap {
   width: 100%;
-  height: min(68vh, 710px);
-  border: 0;
-  background: #f8faf8;
+  height: 100%;
 }
 
-.embedPlaceholder {
+.mapLoading,
+.mapEmpty {
   display: flex;
-  min-height: 330px;
+  min-height: 360px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 28px;
+  gap: 10px;
   border: 1px dashed #dce6de;
-  border-radius: 10px;
+  border-radius: 9px;
   background: #fbfcfb;
+  color: #718078;
   text-align: center;
 }
 
-.placeholderGraphic {
-  position: relative;
-  display: flex;
-  height: 60px;
-  align-items: flex-end;
-  gap: 5px;
-  margin-bottom: 18px;
-  padding: 0 10px;
-  color: #5f9877;
+.mapEmpty svg {
+  color: #438466;
 }
 
-.placeholderGraphic svg {
-  position: absolute;
-  top: -4px;
-  left: 30px;
-  width: 30px;
-  height: 30px;
-  padding: 5px;
-  border-radius: 8px;
-  background: white;
-  box-shadow: 0 3px 12px #dde8df;
-}
-
-.placeholderGraphic div {
-  width: 12px;
-  height: 23px;
-  border-radius: 3px 3px 0 0;
-  background: #aed0b9;
-}
-
-.placeholderGraphic div:nth-of-type(2) {
-  height: 35px;
-  background: #76ae8a;
-}
-
-.placeholderGraphic div:nth-of-type(3) {
-  height: 28px;
-  background: #d6b66e;
-}
-
-.placeholderGraphic div:nth-of-type(4) {
-  height: 45px;
-  background: #93bba0;
-}
-
-.embedPlaceholder h3 {
-  margin: 0;
+.mapEmpty strong {
   color: #42564a;
-  font-family: Manrope, sans-serif;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-.embedPlaceholder > p {
-  max-width: 410px;
-  margin: 8px 0 19px;
-  color: #89968e;
+.mapEmpty span {
+  max-width: 430px;
+  padding: 0 16px;
   font-size: 10px;
   line-height: 1.6;
 }
 
-.embedSteps {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-}
-
-.embedSteps span {
+.mapNote {
   display: flex;
   align-items: center;
-  gap: 6px;
-  color: #728178;
-  font-size: 9px;
+  gap: 8px;
+  color: #77877d;
+  font-size: 10px;
 }
 
-.embedSteps i {
-  display: grid;
-  width: 18px;
-  height: 18px;
-  place-items: center;
-  border-radius: 50%;
-  background: #eaf3ec;
-  color: #4c8665;
-  font-size: 8px;
-  font-style: normal;
-  font-weight: 700;
-}
-
-.powerBiNotice {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 13px 15px;
-  border: 1px solid #e7efe8;
-  border-radius: 8px;
-  background: #f7faf7;
-  color: #5c8a6a;
-}
-
-.powerBiNotice > svg {
+.mapNote svg {
   flex: 0 0 auto;
 }
 
-.powerBiNotice > div {
+.mapMarker {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+}
+
+.mapMarker > span {
+  width: 16px;
+  height: 16px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: #247457;
+  box-shadow: 0 1px 5px rgb(20 46 32 / 45%);
+}
+
+.stationPopup {
   display: grid;
   gap: 4px;
+  min-width: 150px;
+  color: #617067;
+  font-size: 11px;
 }
 
-.powerBiNotice strong {
-  color: #4c6e56;
-  font-size: 10px;
-}
-
-.powerBiNotice span {
-  color: #819087;
-  font-size: 9px;
-  line-height: 1.6;
+.stationPopup strong {
+  margin-bottom: 2px;
+  color: #263a2f;
 }
 
 .pageFooter {
@@ -1937,27 +1784,12 @@
     margin-top: 17px;
   }
 
-  .powerBiIntro {
-    align-items: flex-start;
-    padding: 15px;
+  .mapPanel {
+    padding: 14px;
   }
 
-  .embedForm > div {
-    flex-direction: column;
-  }
-
-  .embedForm button {
-    justify-content: center;
-  }
-
-  .embedFrame {
-    height: 65vh;
-  }
-
-  .embedSteps {
-    display: grid;
-    justify-content: flex-start;
-    text-align: left;
+  .mapCanvas {
+    min-height: 300px;
   }
 
   .pageFooter {

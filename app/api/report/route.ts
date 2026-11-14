@@ -1,8 +1,26 @@
 import { NextResponse } from "next/server";
 import { parseCredentials, withReadOnlyDatabase } from "@/lib/database";
-import { runReport, type ReportRequest } from "@/queries/reports";
+import {
+  runReport,
+  type ReportId,
+  type ReportRequest,
+} from "@/queries/reports";
 
 export const runtime = "nodejs";
+
+const reportIds = new Set<string>([
+  "stations",
+  "station-map",
+  "station-measurements",
+  "regional-pm",
+  "harmful-pm",
+  "optimal-so2",
+  "optimal-co",
+]);
+
+function isReportId(value: unknown): value is ReportId {
+  return typeof value === "string" && reportIds.has(value);
+}
 
 export async function POST(request: Request) {
   try {
@@ -12,9 +30,11 @@ export async function POST(request: Request) {
     }
     const input = body as Record<string, unknown>;
     const credentials = parseCredentials(input.credentials);
-    const report = typeof input.report === "string" ? input.report : "";
+    if (!isReportId(input.report)) {
+      throw new Error("Невідомий тип звіту.");
+    }
     const reportInput: ReportRequest = {
-      report,
+      report: input.report,
       stationId: typeof input.stationId === "string" ? input.stationId : undefined,
       startDate: typeof input.startDate === "string" ? input.startDate : undefined,
       endDate: typeof input.endDate === "string" ? input.endDate : undefined,
