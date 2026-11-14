@@ -8,6 +8,7 @@ import styles from "./page.module.css";
 type StationLocation = {
   id: string;
   city: string;
+  address: string;
   status: string;
   source: string;
   parameters: string;
@@ -38,8 +39,10 @@ const stationIcon = L.divIcon({
 
 export default function StationMap({
   locations,
+  onOpenAnalytics,
 }: {
   locations: StationLocation[];
+  onOpenAnalytics: (stationId: string) => void;
 }) {
   return (
     <div className={styles.mapCanvas}>
@@ -63,9 +66,15 @@ export default function StationMap({
             <Popup>
               <div className={styles.stationPopup}>
                 <strong>
-                  {station.city ? `${station.city} · ` : ""}
-                  Станція {station.id}
+                  {station.address ||
+                    `${station.city ? `${station.city} · ` : ""}Станція ${station.id}`}
                 </strong>
+                {station.address && (
+                  <span>
+                    {station.city ? `${station.city} · ` : ""}
+                    Станція {station.id}
+                  </span>
+                )}
                 {station.status && <span>Статус: {station.status}</span>}
                 {station.source && <span>Джерело: {station.source}</span>}
                 {station.parameters && (
@@ -74,6 +83,13 @@ export default function StationMap({
                 <span>
                   {station.latitude.toFixed(5)}, {station.longitude.toFixed(5)}
                 </span>
+                <button
+                  type="button"
+                  className={styles.stationPopupAction}
+                  onClick={() => onOpenAnalytics(station.id)}
+                >
+                  Перейти до аналітики
+                </button>
               </div>
             </Popup>
           </Marker>

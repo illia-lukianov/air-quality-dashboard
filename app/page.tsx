@@ -45,6 +45,7 @@ import styles from "./page.module.css";
 type StationLocation = {
   id: string;
   city: string;
+  address: string;
   status: string;
   source: string;
   parameters: string;
@@ -209,7 +210,7 @@ export default function Home() {
         if (!response.ok)
           throw new Error(result.error ?? "Помилка отримання даних.");
         setRows(result.rows ?? []);
-        if (report === "stations") {
+        if (report === "stations" || report === "station-map") {
           const stationRows = result.rows ?? [];
           setStationOptions(stationRows);
           setStationId((currentStationId) =>
@@ -675,6 +676,10 @@ export default function Home() {
               rows={rows}
               loading={loading}
               error={error}
+              onOpenAnalytics={(selectedStationId) => {
+                setStationId(selectedStationId);
+                chooseSection("station-measurements");
+              }}
               onRetry={() => void fetchReport(section)}
             />
           ) : (
@@ -1324,11 +1329,13 @@ function StationMapPanel({
   rows,
   loading,
   error,
+  onOpenAnalytics,
   onRetry,
 }: {
   rows: Row[];
   loading: boolean;
   error: string;
+  onOpenAnalytics: (stationId: string) => void;
   onRetry: () => void;
 }) {
   const locations = useMemo(
@@ -1341,6 +1348,7 @@ function StationMapPanel({
           {
             id: String(row.station_id ?? ""),
             city: String(row.city ?? ""),
+            address: String(row.station_address ?? ""),
             status: String(row.status ?? ""),
             source: String(row.source_type ?? ""),
             parameters: String(row.parameters ?? ""),
@@ -1394,7 +1402,10 @@ function StationMapPanel({
         </span>
       </div>
       {locations.length ? (
-        <InteractiveStationMap locations={locations} />
+        <InteractiveStationMap
+          locations={locations}
+          onOpenAnalytics={onOpenAnalytics}
+        />
       ) : (
         <div className={styles.mapEmpty}>
           <MapPin size={24} />

@@ -1498,6 +1498,21 @@
   color: #263a2f;
 }
 
+.stationPopupAction {
+  margin-top: 5px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: #1c7557;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.stationPopupAction:hover {
+  background: #145d45;
+}
+
 .pageFooter {
   display: flex;
   flex-wrap: wrap;

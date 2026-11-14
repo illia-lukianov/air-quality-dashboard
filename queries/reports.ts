@@ -55,6 +55,12 @@ export async function runReport(client: Client, input: ReportRequest) {
           s.id_station AS station_id,
           s.city,
           COALESCE(
+            NULLIF(address.data->>'address', ''),
+            NULLIF(address.data->>'full_address', ''),
+            NULLIF(address.data->>'formatted_address', ''),
+            NULLIF(address.data->>'street', '')
+          ) AS station_address,
+          COALESCE(
             NULLIF(to_jsonb(s)->>'latitude', ''),
             NULLIF(to_jsonb(s)->>'lat', ''),
             NULLIF(address.data->>'latitude', ''),
